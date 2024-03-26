@@ -41,7 +41,7 @@ def champion_callback(study, frozen_trial):
 
 
 
-def objective_function(trial, X_train, X_test, y_train, y_test, pipeline, param_space):
+def objective_function_old(trial, X_train, X_test, y_train, y_test, pipeline, param_space, metric_to_maximize):
     """Objective function for hyperparameter optimization."""
     params = {}
     for k, v in param_space.items():
@@ -66,8 +66,37 @@ def objective_function(trial, X_train, X_test, y_train, y_test, pipeline, param_
         mlflow.log_params(params)
         mlflow.log_metrics(metrics)
         
-        return metrics['test_f1_score']
+        return metrics[metric_to_maximize]
 
+def objective_function(trial, X_train, X_test, y_train, y_test, pipeline, param_space, metric_to_maximize):
+    """Objective function for hyperparameter optimization."""
+    params = {}
+    for k, v in param_space.items():
+        if isinstance(v, tuple):
+            if len(v) == 2:
+                if k == 'classifier__subsample':
+                    params[k] = trial.suggest_float(k, v[0], v[1])
+                else:
+                    params[k] = trial.suggest_int(k, v[0], v[1])
+            elif len(v) == 3 and v[2] == 'log':
+                params[k] = trial.suggest_loguniform(k, v[0], v[1])
+        elif isinstance(v, list):
+            params[k] = trial.suggest_categorical(k, v)
+        else:
+            params[k] = v
+
+    pipeline.set_params(**params)
+
+    with mlflow.start_run(nested=True):
+        pipeline.fit(X_train, y_train)
+        y_pred = pipeline.predict(X_test)
+        y_pred_proba = pipeline.predict_proba(X_test)
+        metrics = get_classification_metrics(y_test, y_pred, y_pred_proba, prefix='test')
+        
+        mlflow.log_params(params)
+        mlflow.log_metrics(metrics)
+        
+        return metrics[metric_to_maximize]
 
 def map_best_params(best_params, param_space):
     mapped_params = {}

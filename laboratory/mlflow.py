@@ -5,6 +5,7 @@ import mlflow
 from typing import Any
 from typing import Optional
 import pandas as pd
+from datetime import datetime
 
 
 def set_mlflow_tracking_uri_from_env(env_vars):
@@ -61,3 +62,9 @@ def get_or_create_experiment(experiment_name):
         experiment_id = experiment.experiment_id
     mlflow.set_experiment(experiment_name)  # Add this line to set the experiment
     return experiment_id
+
+
+def get_run_name(run_name=None):
+    if run_name is None:
+        run_name = datetime.now().strftime("%Y%m%d_%H%M%S")
+    return run_name
