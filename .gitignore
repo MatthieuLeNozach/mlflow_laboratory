@@ -1,0 +1,5 @@
+
+temp/
+
+.environment/.env.secret
+*__pycache__/
