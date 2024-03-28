@@ -11,7 +11,7 @@
 Welcome to the MLflow Laboratory, your one-stop solution for hyperparameter tuning, model experimentation, and MLflow experiment tracking. This project is designed to speed up and automate the process of machine learning model experimentation, leveraging the power of notebooks for open, easily modifiable code. Whether you're testing different models, exploring hyperparameter ranges, or tracking experiments with MLflow, this guide will help you get started and make the most of MLflow Laboratory.
 
 
-# **Project Overview**
+## **Project Overview**
 
 MLflow Laboratory aims to streamline the machine learning workflow by providing:
 
@@ -23,7 +23,9 @@ The project's structure encourages open code practices, allowing for easy rewrit
 
 
 
-## **Prerequisites**
+## **Getting Started**
+
+### **Prerequisites**
 
 Before you begin, ensure you have the following installed:
 
@@ -41,7 +43,7 @@ This project uses mlflow's remote server structure:  [remote-server](https://mlf
 The artifact store is a MinIO container, which behaves like a local s3 bucket and can be easily ported to an AWS s3 bucket. 
 
 
-## **Installation**
+### **Installation**
 
 Clone the repository to your local machine:
 ```bash
@@ -49,7 +51,7 @@ git clone https://github.com/MatthieuLeNozach/mlflow_laboratory
 ```
 **Navigate into the `project directory`**  
 
-## **Setup**
+### **Setup**
 
 To get the whole MLflow service up and running, use the Makefile commands:
 
@@ -62,7 +64,7 @@ make down
 
 ```
 
-# **Connecting to MLflow UI**
+### **Connecting to MLflow UI**
 
 After running `make up`, the MLflow tracking server will be accessible. You can connect to the MLflow UI by navigating to `http://localhost:5000` in your web browser. Here, you can view and compare experiments, runs, parameters, and metrics.
 
