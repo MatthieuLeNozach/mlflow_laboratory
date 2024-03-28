@@ -14,33 +14,41 @@ import laboratory.sklearn as sklearn
 import laboratory.tuning as tuning
 from laboratory.mlflow import get_run_name
 from laboratory.artifacts import log_confusion_matrix, log_roc_curve
-from lib.models.sklearn import RandomForestClassifier
+from lib.models.sklearn import RandomForestClassifier # PLACEHOLDER, only needed when used as executable script
 
+###############################################
 #################### SETUP ####################
+######## Fill experiment input here ########### 
 
-DATASET_PATH = DATASET_PATH # Placeholder 
+DATASET_PATH = DATASET_PATH # PLACEHOLDER, fill only when used as executable script
 DF = pd.read_csv(DATASET_PATH)
-TARGET_NAME = 'Exited'
-FEATURES_TO_DROP = ['CustomerId', 'Surname']
-DATASET_SPLIT_PARAMS = {'test_size': 0.2, 'stratify': DF[TARGET_NAME], 'random_state': 42}
 
-CLASSIFIER = clf
-SPACE = KNC_SPACE 
+TARGET_NAME = TARGET_NAME # Another PLACEHOLDER...
+FEATURES_TO_DROP = FEATURES_TO_DROP # PLACEHOLDER
+
+DATASET_SPLIT_PARAMS = {'test_size': 0.2, 'stratify': DF[TARGET_NAME], 'random_state': 42} # or stratify=None
+
+CLASSIFIER = clf # PLACEHOLDER
+SPACE = RFC_SPACE # PLACEHOLDER
 SAVE_MODEL = False
 
 OPTUNA_STUDY_TRIALS = 20
-OPTUNA_METRIC_TO_MAXIMIZE = 'test_f1_score'
+OPTUNA_METRIC_TO_MAXIMIZE = 'f1_score'  
 
 
-EXPERIMENT_NAME = DATASET_PATH.split('/')[-1]
-RUN_NAME = get_run_name(run_name=None)
+EXPERIMENT_NAME = DATASET_PATH.split('/')[-1] # Experiment name is file name by default
+RUN_NAME = get_run_name(run_name=None) # Run name is date+time by default
 
 
-#################### MAIN ####################
+###############################################
+#################### MAIN #####################
 
 if __name__ == '__main__':
     df = DF.copy()
-    df = df.drop(columns=FEATURES_TO_DROP)    
+    
+    if FEATURES_TO_DROP is not None:
+        df = df.drop(columns=FEATURES_TO_DROP)    
+        
     
     X_train, X_test, y_train, y_test = train_test_split(
         df.drop(columns=TARGET_NAME), df[TARGET_NAME], **DATASET_SPLIT_PARAMS
@@ -62,7 +70,7 @@ if __name__ == '__main__':
         ]
     )
 
-    BINARY_CLASSIFICATION_PIPELINE = Pipeline(steps=[
+    CLASSIFICATION_PIPELINE = Pipeline(steps=[
         ('preprocessing', PREPROCESSING_PIPELINE),
         ('classifier', CLASSIFIER)
     ])
@@ -81,7 +89,7 @@ if __name__ == '__main__':
                 X_test=X_test,
                 y_train=y_train,
                 y_test=y_test,
-                pipeline=BINARY_CLASSIFICATION_PIPELINE,
+                pipeline=CLASSIFICATION_PIPELINE,
                 param_space=SPACE,
                 metric_to_maximize=OPTUNA_METRIC_TO_MAXIMIZE
             ),
@@ -92,12 +100,12 @@ if __name__ == '__main__':
         best_params = study.best_params
         print("BEST PARAMS FROM main(): ", best_params)
 
-        BINARY_CLASSIFICATION_PIPELINE.set_params(**best_params)
-        BINARY_CLASSIFICATION_PIPELINE.fit(X_train, y_train)
-        y_pred = BINARY_CLASSIFICATION_PIPELINE.predict(X_test)
-        y_pred_proba = BINARY_CLASSIFICATION_PIPELINE.predict_proba(X_test)
+        CLASSIFICATION_PIPELINE.set_params(**best_params)
+        CLASSIFICATION_PIPELINE.fit(X_train, y_train)
+        y_pred = CLASSIFICATION_PIPELINE.predict(X_test)
+        y_pred_proba = CLASSIFICATION_PIPELINE.predict_proba(X_test)
 
-        metrics = tuning.get_classification_metrics(y_test, y_pred, y_pred_proba, prefix='best_model_test')
+        metrics = tuning.get_classification_metrics(y_test, y_pred, y_pred_proba)
         log_confusion_matrix(y_test, y_pred)
         log_roc_curve(y_test, y_pred_proba)
 

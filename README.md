@@ -1,7 +1,16 @@
-# mlflow_laboratory
-Quick hyperparameter tuning and training script generation
+# MLflow Laboratory
+
+*Quick hyperparameter tuning and training script generation*
+
+
+
 ## **Work In Progress**
 
+This project uses mlflow's remote server structure:
+[remote-server](https://mlflow.org/docs/latest/tracking/tutorials/remote-server.html)
+![alt text](readme/3.png)
+
+The artifact store is a MinIO container, which behaves like a local s3 bucket and can be easily ported to an AWS s3 bucket.
 
 ## **Installation**
  -**# TODO**
