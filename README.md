@@ -190,5 +190,6 @@ Paste and execute one of these commands into a code cell to retrieve a mlflow sc
 ![txt](readme/5.png)
 ![txt](readme/6.png)
 ![txt](readme/7.png)
+![txt](readme/8.png)
 
 
