@@ -4,22 +4,18 @@
 
 
 ---
-## ***Work In Progress! See roadmap***
+## ***Project Overview (Work In Progress!)***
 
 ---
 
-Welcome to the MLflow Laboratory, your one-stop solution for hyperparameter tuning, model experimentation, and MLflow experiment tracking. This project is designed to speed up and automate the process of machine learning model experimentation, leveraging the power of notebooks for open, easily modifiable code. Whether you're testing different models, exploring hyperparameter ranges, or tracking experiments with MLflow, this guide will help you get started and make the most of MLflow Laboratory.
+This project aims to speed up the data preprocessing, model experimentation and hyperparameter tuning when working on notebooks. 
 
-
-## **Project Overview**
-
-MLflow Laboratory aims to streamline the machine learning workflow by providing:
-
-- A comprehensive bank of hyperparameters and their ranges or choices, which will be continuously updated.
+Key features:
+- A comprehensive bank of hyperparameters and their ranges or choices to set boundaries for **Optuna** automatic hyperparameter optimization
 - Generic machine learning training scripts that can be loaded into a Jupyter notebook or executed from the terminal.
 - Integration with MLflow for experiment tracking, making it easier to log parameters, metrics, and artifacts.
 
-The project's structure encourages open code practices, allowing for easy rewriting and modification of code parts that don't fit a particular situation, unlike packaged code.
+The scripted templates encourage open code practices, allowing for easy rewriting and modification of code parts that don't fit a particular situation, unlike packaged code.
 
 
 
@@ -33,7 +29,7 @@ Before you begin, ensure you have the following installed:
 - Docker / Docker-Compose
 - Makefile
 - Python (with `numpy`, `pandas`, `mlflow`, `optuna`, `scikit-learn`)
-- MinIO (local or remote setup for artifact storage)  
+- MinIO / S3 (local or remote setup for artifact storage)  
 
 Docker is used to containerize the mlflow server only, you're free to run experiments on whatever fits your needs: a python virtual environment, another docker container...  
 
@@ -104,7 +100,7 @@ svc = SKLEARN_CLASSIFIERS['SVC']()
 ...
 ```
 #### **b. Select hyperparameters**
-Automatic hyperparameter tuning is performed with Optuna library,
+Automatic hyperparameter tuning is performed with **Optuna** library,
 More information is available at [https://optuna.readthedocs.io/](https://optuna.readthedocs.io/en/stable/tutorial/index.html).  
 
 The growing bank of hyperparameters is available under `project_root/lib/hp/...`. For example:
@@ -134,7 +130,7 @@ Load hyperparameters:
 ```
 #### **a. Retrieve scripts**
 
-The growing bank of hyperparameters is available under `project_root/scripts/...`. 
+The bank of hyperparameters is available under `project_root/scripts/...`. 
 Paste and execute one of these commands into a code cell to retrieve a mlflow script:
 
 **Classification**  
